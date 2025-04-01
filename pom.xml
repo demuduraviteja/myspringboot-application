@@ -19,6 +19,10 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.release>17</maven.compiler.release>
+    <sonar.projectKey>my-e2e-pipeline-project</sonar.projectKey>
+    <sonar.projectName>my-e2e-pipeline-project</sonar.projectName>
+    <sonar.host.url>http://13.127.57.158:9000/</sonar.host.url>
+    <sonar.token>sqa_7a72f9643f013cda1db27950695e82bdcd866a91</sonar.token>
   </properties>
 
   <dependencyManagement>
@@ -108,6 +112,11 @@
               </goals>
             </execution>
           </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.sonarsource.scanner.maven</groupId>
+          <artifactId>sonar-maven-plugin</artifactId>
+          <version>3.9.1.2184</version>
         </plugin>
       </plugins>
     </pluginManagement>
