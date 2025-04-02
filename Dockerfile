@@ -1,7 +1,7 @@
 # Use Amazon Linux 2 as the base image
 FROM amazonlinux:2 AS build
 
-WORKDIR /app
+WORKDIR /appCode
 
 # Install Java and curl using yum
 RUN yum update -y && \
@@ -22,7 +22,7 @@ RUN curl -u $NEXUS_USERNAME:$NEXUS_PASSWORD -O $NEXUS_URL/${GROUP_ID//./\/}/$ART
 # Use a minimal runtime image
 FROM amazonlinux:2
 
-WORKDIR /app
+WORKDIR /appCode
 
 # Install Java runtime only (not curl)
 RUN yum install -y java-17-amazon-corretto && yum clean all
