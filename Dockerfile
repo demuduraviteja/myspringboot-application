@@ -31,6 +31,5 @@ COPY --from=build /app/${ARTIFACT_ID}-${VERSION}.jar /app/app.jar
 
 # Expose the application port
 EXPOSE 8085
-
 # Run the JAR file
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
