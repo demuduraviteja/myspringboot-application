@@ -1,5 +1,5 @@
-# Use a distroless image as the base
-FROM gcr.io/distroless/java17
+# Use Amazon Linux 2 as the base image for build
+FROM amazonlinux:2 AS build
 
 # Set working directory
 WORKDIR /app
@@ -11,14 +11,26 @@ ARG ARTIFACT_ID="my-springboot"
 ARG VERSION="1.0.0"
 ARG JAR_NAME="${ARTIFACT_ID}-${VERSION}.jar"
 
-# Install curl to fetch JAR at runtime
-RUN apt-get update && apt-get install -y curl
+# Install Java and curl using yum
+RUN yum update -y && \
+    yum install -y java-17-amazon-corretto curl
+
+# Download JAR at build time
+RUN curl -u $NEXUS_USERNAME:$NEXUS_PASSWORD -O $NEXUS_URL/${GROUP_ID//./\/}/$ARTIFACT_ID/$VERSION/$JAR_NAME
+
+# Use Amazon Linux for final runtime
+FROM amazonlinux:2
+
+WORKDIR /app
+
+# Install Java runtime only (no curl needed in the final image)
+RUN yum install -y java-17-amazon-corretto && yum clean all
+
+# Copy the JAR from the build stage
+COPY --from=build /app/${ARTIFACT_ID}-${VERSION}.jar /app/app.jar
 
 # Expose the application port
 EXPOSE 8085
 
-# Set environment variables for runtime
-ENV SERVER_PORT=8085
-
-# Download JAR at container runtime and run it
-ENTRYPOINT ["/bin/sh", "-c", "curl -u $NEXUS_USERNAME:$NEXUS_PASSWORD -O $NEXUS_URL/${GROUP_ID//./\/}/$ARTIFACT_ID/$VERSION/$JAR_NAME && java -jar $JAR_NAME"]
+# Run the JAR file
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
