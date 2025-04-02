@@ -1,3 +1,4 @@
+# Use a minimal base image for building
 FROM alpine:latest AS build
 WORKDIR /appCode
 
@@ -10,15 +11,20 @@ ARG VERSION
 ARG NEXUS_USERNAME
 ARG NEXUS_PASSWORD
 
-RUN echo "Downloading: $NEXUS_URL/${GROUP_ID//./\/}/$ARTIFACT_ID/$VERSION/${ARTIFACT_ID}-${VERSION}.jar" \
-    && curl -u "$NEXUS_USERNAME:$NEXUS_PASSWORD" -f -o "/appCode/${ARTIFACT_ID}-${VERSION}.jar" "$NEXUS_URL/${GROUP_ID//./\/}/$ARTIFACT_ID/$VERSION/${ARTIFACT_ID}-${VERSION}.jar"
+# Fetch latest snapshot JAR from Nexus metadata
+RUN latest_version=$(curl -s -u "$NEXUS_USERNAME:$NEXUS_PASSWORD" "$NEXUS_URL/${GROUP_ID//./\/}/$ARTIFACT_ID/$VERSION/maven-metadata.xml" | \
+    grep '<value>' | tail -1 | sed 's/.*<value>\(.*\)<\/value>.*/\1/') \
+    && echo "Latest Snapshot Version: $latest_version" \
+    && curl -u "$NEXUS_USERNAME:$NEXUS_PASSWORD" -f -o "/appCode/${ARTIFACT_ID}-${latest_version}.jar" \
+    "$NEXUS_URL/${GROUP_ID//./\/}/$ARTIFACT_ID/$VERSION/${ARTIFACT_ID}-${latest_version}.jar"
 
+# Minimal runtime image
 FROM alpine:latest
 WORKDIR /appCode
 
 RUN apk add --no-cache openjdk17
 
-COPY --from=build /appCode/${ARTIFACT_ID}-${VERSION}.jar /appCode/app.jar
+COPY --from=build /appCode/${ARTIFACT_ID}-*.jar /appCode/app.jar
 
 EXPOSE 8085
 ENTRYPOINT ["java", "-jar", "/appCode/app.jar"]
