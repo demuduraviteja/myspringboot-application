@@ -14,6 +14,8 @@ ARG ARTIFACT_ID="my-springboot"
 ARG VERSION="1.0.0"
 ARG JAR_NAME="${ARTIFACT_ID}-${VERSION}.jar"
 
+RUN echo "Nexus Username: $NEXUS_USERNAME"
+
 # Download the JAR file at build time
 RUN curl -u $NEXUS_USERNAME:$NEXUS_PASSWORD -O $NEXUS_URL/${GROUP_ID//./\/}/$ARTIFACT_ID/$VERSION/$JAR_NAME
 
