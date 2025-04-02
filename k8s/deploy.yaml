@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: springboot-app-deployment
+  labels:
+    app: springboot-app
+spec:
+  replicas: 2  # Number of pods to be created
+  selector:
+    matchLabels:
+      app: springboot-app
+  template:
+    metadata:
+      labels:
+        app: springboot-app
+    spec:
+      containers:
+        - name: springboot-app
+          image: <ECR_REGISTRY>/<ECR_REPO_NAME>:<IMAGE_TAG>  # Replace with your ECR image URI
+          ports:
+            - containerPort: 8085  # Match with your Spring Boot app port
+          env:
+            - name: SERVER_PORT
+              value: "8085"
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: springboot-app-service
+spec:
+  selector:
+    app: springboot-app
+  ports:
+    - protocol: TCP
+      port: 8085  # Expose your Spring Boot app port
+      targetPort: 8085
+  type: NodePort  # You can change to ClusterIP or NodePort if needed

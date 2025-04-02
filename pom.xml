@@ -21,7 +21,7 @@
     <maven.compiler.release>17</maven.compiler.release>
     <sonar.projectKey>my-e2e-pipeline-project</sonar.projectKey>
     <sonar.projectName>my-e2e-pipeline-project</sonar.projectName>
-    <sonar.host.url>http://13.127.57.158:9000/</sonar.host.url>
+    <sonar.host.url>http://13.234.217.143:9000/</sonar.host.url>
     <sonar.token>sqa_7a72f9643f013cda1db27950695e82bdcd866a91</sonar.token>
   </properties>
 
