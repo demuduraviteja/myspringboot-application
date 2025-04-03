@@ -10,12 +10,12 @@ ARG GROUP_ID
 ARG ARTIFACT_ID
 ARG NEXUS_USERNAME
 ARG NEXUS_PASSWORD
-ARG SNAPSHOT_JAR  # Pass the latest snapshot JAR from Groovy
+ARG SNAPSHOT_JAR  # Passed from Jenkins Groovy script
 
-# Download the correct snapshot JAR
-RUN export GROUP_PATH=$(echo $GROUP_ID | sed 's/\./\//g') && \
+# Download the correct snapshot JAR directly
+RUN echo "Downloading from: $NEXUS_URL/$GROUP_ID/$ARTIFACT_ID/1.0-SNAPSHOT/$SNAPSHOT_JAR" && \
     curl -u "$NEXUS_USERNAME:$NEXUS_PASSWORD" -f -o "/appCode/app.jar" \
-    "$NEXUS_URL/${GROUP_PATH}/$ARTIFACT_ID/1.0-SNAPSHOT/$SNAPSHOT_JAR"
+    "$NEXUS_URL/$GROUP_ID/$ARTIFACT_ID/1.0-SNAPSHOT/$SNAPSHOT_JAR"
 
 # Minimal runtime image
 FROM alpine:latest
