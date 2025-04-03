@@ -8,23 +8,26 @@ RUN apk add --no-cache openjdk17 curl
 ARG NEXUS_URL
 ARG GROUP_ID
 ARG ARTIFACT_ID
+ARG VERSION
+ARG SNAPSHOT_JAR
 ARG NEXUS_USERNAME
 ARG NEXUS_PASSWORD
-ARG SNAPSHOT_JAR  
 
-# Convert ARGs to ENV (Docker expands ARGs only in ENV, COPY, and RUN with shell expansion)
-ENV NEXUS_URL=$NEXUS_URL
+# Convert ARGs to ENV
+ENV NEXUS_URL=${NEXUS_URL%/}  # Remove trailing slash from NEXUS_URL
 ENV GROUP_ID=$GROUP_ID
 ENV ARTIFACT_ID=$ARTIFACT_ID
+ENV VERSION=$VERSION
+ENV SNAPSHOT_JAR=$SNAPSHOT_JAR
 ENV NEXUS_USERNAME=$NEXUS_USERNAME
 ENV NEXUS_PASSWORD=$NEXUS_PASSWORD
-ENV SNAPSHOT_JAR=$SNAPSHOT_JAR
 
-# Ensure there is no trailing slash in NEXUS_URL before using it
-RUN NEXUS_URL=$(echo $NEXUS_URL | sed 's:/*$::') && \
-    echo "Downloading JAR from: ${NEXUS_URL}/${GROUP_ID}/${ARTIFACT_ID}/1.0-SNAPSHOT/${SNAPSHOT_JAR}" && \
-    curl -u "${NEXUS_USERNAME}:${NEXUS_PASSWORD}" -f -o "/appCode/app.jar" \
-    "${NEXUS_URL}/${GROUP_ID}/${ARTIFACT_ID}/1.0-SNAPSHOT/${SNAPSHOT_JAR}"
+# Convert Maven group ID to directory structure and construct correct URL
+RUN GROUP_PATH=$(echo $GROUP_ID | sed 's/\./\//g') && \
+    CLEAN_NEXUS_URL=$(echo $NEXUS_URL | sed 's:/*$::') && \
+    DOWNLOAD_URL="${CLEAN_NEXUS_URL}/${GROUP_PATH}/${ARTIFACT_ID}/${VERSION}/${SNAPSHOT_JAR}" && \
+    echo "Downloading JAR from: ${DOWNLOAD_URL}" && \
+    curl -u "${NEXUS_USERNAME}:${NEXUS_PASSWORD}" -f -o "/appCode/app.jar" "${DOWNLOAD_URL}"
 
 # Minimal runtime image
 FROM alpine:latest
