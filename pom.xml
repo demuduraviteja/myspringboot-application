@@ -22,7 +22,7 @@
     <sonar.projectKey>my-e2e-pipeline-project</sonar.projectKey>
     <sonar.projectName>my-e2e-pipeline-project</sonar.projectName>
     <sonar.host.url>http://43.204.35.72:9000/</sonar.host.url>
-    <sonar.token>sqa_7a72f9643f013cda1db27950695e82bdcd866a91</sonar.token>
+    <sonar.token>squ_6c13ce6599f78755cc3cf22c8d470787a6864f56</sonar.token>
   </properties>
 
   <dependencyManagement>
