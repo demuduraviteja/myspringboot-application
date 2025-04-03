@@ -13,8 +13,9 @@ ARG NEXUS_PASSWORD
 ARG SNAPSHOT_JAR  # Pass the latest snapshot JAR from Groovy
 
 # Download the correct snapshot JAR
-RUN curl -u "$NEXUS_USERNAME:$NEXUS_PASSWORD" -f -o "/appCode/app.jar" \
-    "$NEXUS_URL/${GROUP_ID//./\/}/$ARTIFACT_ID/1.0-SNAPSHOT/$SNAPSHOT_JAR"
+RUN export GROUP_PATH=$(echo $GROUP_ID | sed 's/\./\//g') && \
+    curl -u "$NEXUS_USERNAME:$NEXUS_PASSWORD" -f -o "/appCode/app.jar" \
+    "$NEXUS_URL/${GROUP_PATH}/$ARTIFACT_ID/1.0-SNAPSHOT/$SNAPSHOT_JAR"
 
 # Minimal runtime image
 FROM alpine:latest
