@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: springboot-app
-          image: <ECR_REGISTRY>/<ECR_REPO_NAME>:<IMAGE_TAG>  # Replace with your ECR image URI
+          image: ravi147/my-springboot-app:latest  # ✅ Replace with your Docker Hub repository
           ports:
             - containerPort: 8085  # Match with your Spring Boot app port
           env:
@@ -41,4 +41,4 @@ spec:
     - protocol: TCP
       port: 8085  # Expose your Spring Boot app port
       targetPort: 8085
-  type: NodePort  # You can change to ClusterIP or NodePort if needed
+  type: NodePort  # Change to LoadBalancer if deploying on a cloud provider
