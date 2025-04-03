@@ -6,16 +6,15 @@ RUN apk add --no-cache openjdk17 curl
 
 # Arguments for Nexus
 ARG NEXUS_URL
-ARG GROUP_ID
 ARG ARTIFACT_ID
 ARG NEXUS_USERNAME
 ARG NEXUS_PASSWORD
 ARG SNAPSHOT_JAR  # Passed from Jenkins Groovy script
 
-# Download the correct snapshot JAR directly
-RUN echo "Downloading from: $NEXUS_URL/$GROUP_ID/$ARTIFACT_ID/1.0-SNAPSHOT/$SNAPSHOT_JAR" && \
+# Construct the correct download URL and download the JAR file
+RUN echo "Downloading JAR from: $NEXUS_URL/$ARTIFACT_ID/1.0-SNAPSHOT/$SNAPSHOT_JAR" && \
     curl -u "$NEXUS_USERNAME:$NEXUS_PASSWORD" -f -o "/appCode/app.jar" \
-    "$NEXUS_URL/$GROUP_ID/$ARTIFACT_ID/1.0-SNAPSHOT/$SNAPSHOT_JAR"
+    "$NEXUS_URL/$ARTIFACT_ID/1.0-SNAPSHOT/$SNAPSHOT_JAR"
 
 # Minimal runtime image
 FROM alpine:latest
