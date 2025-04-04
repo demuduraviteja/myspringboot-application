@@ -5,7 +5,7 @@ metadata:
   labels:
     app: springboot-app
 spec:
-  replicas: 2  # Number of pods to be created
+  replicas: 2
   selector:
     matchLabels:
       app: springboot-app
@@ -16,14 +16,12 @@ spec:
     spec:
       containers:
         - name: springboot-app
-          image: ravi147/my-springboot-app:latest  # ✅ Replace with your Docker Hub repository
+          image: ravi147/my-springboot-app:latest
           ports:
-            - containerPort: 8085  # Match with your Spring Boot app port
-          env:
-            - name: SERVER_PORT
-              value: "8085"
-            - name: SERVER_ADDRESS
-              value: "0.0.0.0"
+            - containerPort: 8085
+          args:
+            - "--server.port=8085"
+            - "--server.address=0.0.0.0"
           resources:
             limits:
               memory: "512Mi"
@@ -41,6 +39,6 @@ spec:
     app: springboot-app
   ports:
     - protocol: TCP
-      port: 8085  # Expose your Spring Boot app port
+      port: 8085
       targetPort: 8085
-  type: NodePort  # Change to LoadBalancer if deploying on a cloud provider
+  type: NodePort
