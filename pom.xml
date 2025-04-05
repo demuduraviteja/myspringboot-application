@@ -21,7 +21,7 @@
     <maven.compiler.release>17</maven.compiler.release>
     <sonar.projectKey>my-e2e-pipeline-project</sonar.projectKey>
     <sonar.projectName>my-e2e-pipeline-project</sonar.projectName>
-    <sonar.host.url>http://15.207.86.217:9000/</sonar.host.url>
+    <sonar.host.url>http://13.233.90.80:9000/</sonar.host.url>
     <sonar.token>squ_6c13ce6599f78755cc3cf22c8d470787a6864f56</sonar.token>
   </properties>
 
@@ -59,11 +59,11 @@
   <distributionManagement>
     <repository>
       <id>nexus</id>
-      <url>http://13.232.188.153:8081/repository/maven-releases/</url>
+      <url>http://43.205.117.246:8081/repository/maven-releases/</url>
     </repository>
     <snapshotRepository>
       <id>nexus-snapshots</id>
-      <url>http://13.232.188.153:8081/repository/maven-snapshots/</url>
+      <url>http://43.205.117.246:8081/repository/maven-snapshots/</url>
     </snapshotRepository>
   </distributionManagement>
 
